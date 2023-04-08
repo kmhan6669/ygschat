@@ -1,7 +1,9 @@
+import nofriends from "../public/nofriends.jpg"
+
 function Friends() {
     return (
         <div>
-            Friends
+            <img src={nofriends} alt='image'/>
         </div>
     );
 }

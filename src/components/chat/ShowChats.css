@@ -1,0 +1,46 @@
+.chats {
+    display: flex;
+    margin: 5px;
+    border-radius: 10px;
+    border: none;
+    display: block;
+    width: auto;
+    height:350px;
+    padding: 8px 16px;
+    background-color: #ecff96;
+    color: #020202;
+    overflow: scroll;
+}
+.chats::-webkit-scrollbar{
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    padding-right: 17px; /* 스크롤바 너비 */
+    box-sizing: content-box;
+}
+.chat {
+    margin: 5px;
+    padding: 5px;
+    display: flex;
+    background-color: white;
+    border-radius: 10px;
+    width: 50%;
+    float: left;
+}
+.mychat {
+    margin: 5px;
+    padding: 5px;
+    background-color: rgb(255, 177, 177);
+    border-radius: 10px;
+    display: flex;
+    width: 50%;
+    float: right;
+}
+
+.time {
+    vertical-align: bottom;
+    display: flex;
+    font-size: 10px;
+    
+}

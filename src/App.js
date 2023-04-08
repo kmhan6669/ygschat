@@ -1,62 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
-
-import Home from './pages/Home';
+import Rooms from './pages/Rooms';
 import Friends from './pages/Friends';
-import { getMessages, postMessage } from './hooks/chatMessagesAPIs';
+import { getMessages } from './hooks/chatMessagesAPIs';
+import Chats from './pages/Chats';
+import Home from './pages/Home';
 
-const DUMMY_RESPONSE = [
-  { id: 1, username: 'han', roomname: 'room1', text: 'text1' },
-  { id: 2, username: 'han', roomname: 'room2', text: 'text2' },
-  { id: 3, username: 'karina', roomname: 'room2', text: 'text3' },
-  { id: 4, username: 'karina', roomname: 'room2', text: 'text4' }
-];
+import './App.css';
 
 function App() {
   const [response, setResponse] = useState([]);
-  const [btnActive, setBtnActive] = useState("");
+  const [rooms, setRooms] = useState([]);
 
-  //서버 연결 불가 시
+  const [btnColor, setBtnColor] = useState('curr')
+
+  function creatRoomList(response) {
+      const roomNames = response.map(res => res.roomname)
+      const filteredRoomNames = roomNames.filter((room, index) => {
+          return roomNames.indexOf(room) === index;
+      })
+      return filteredRoomNames;
+  }
+
   useEffect(() => { 
-    setResponse(DUMMY_RESPONSE)
-  
-  }, [])
-  //서버 연결 가능 시
-  // useEffect(() => { 
-  //     setInterval(async () => {
-    //       await getMessages()
-    //         .then((resData) => {
-      //           setResponse(resData)
+      setInterval(() => {
+          getMessages()
+            .then((resData) => {
+                setResponse(resData)
+                
+              })
       
-      //         })
-      
-      //     }, 1000);
-      //   }, [])
-  
-  const toggleActive = (e) => {
-    console.log(e)
-    setBtnActive((prev) => {
-      return e
-    });
-  };
-
+          }, 1000);
+        }, [])
+  useEffect(()=>{
+    setRooms(creatRoomList(response))
+  },
+  [response])
   return (
-    <div>
-      <BrowserRouter>
-        <div className='contents'>
-          <ul className='nav'>
-            <li>
-              <Link to="/">HOME</Link>
+    <div className='app'>
+
+      <BrowserRouter >
+        <div className='componenets'>
+          <ul className='ul'>
+            <li >
+              <Link 
+                to="/rooms" 
+                className={`btn ${btnColor === 'curr' ? 'active' : ''}`} 
+                onClick={() => setBtnColor('curr')} 
+              >
+                Rooms
+              </Link>
             </li>
             <li >
-              <Link to="/friends">Friends</Link>
+              <Link 
+                to="/friends" 
+                className={`btn ${btnColor === 'prev' ? 'active' : ''}`} 
+                onClick={() => setBtnColor('prev')} 
+              >
+                Friends
+              </Link>
             </li>
           </ul>
-          <div className='contentsinfo'>
-            <Routes>
-              <Route path={`/`} element={<Home response={response}/>} />
+          <div className='routes'>
+            <Routes >
+              <Route path='/rooms' element={<Rooms rooms={rooms} />}/>
               <Route path="friends" element={<Friends />} />
+              {rooms.map((room) => {
+                    return (
+                        <Route key={room} path={`rooms/${room}`} element={<Chats response={response} room={room}/>} />
+                    )
+                })
+                }
             </Routes>
           </div>
         </div>
