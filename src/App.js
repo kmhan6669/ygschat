@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import Rooms from './pages/Rooms';
 import Friends from './pages/Friends';
-import { getMessages } from './hooks/chatMessagesAPIs';
+import { getMessages } from './apis/chatMessagesAPIs';
 import Chats from './pages/Chats';
 import Home from './pages/Home';
 
@@ -16,27 +16,25 @@ function App() {
   const [btnColor, setBtnColor] = useState('curr')
 
   function creatRoomList(response) {
-      const roomNames = response.map(res => res.roomname)
-      const filteredRoomNames = roomNames.filter((room, index) => {
-          return roomNames.indexOf(room) === index;
-      })
+      const roomNames = new Set(response.map(res => res.roomname)) 
+      const filteredRoomNames = [...roomNames]
       return filteredRoomNames;
   }
 
   useEffect(() => { 
-      setInterval(() => {
-          getMessages()
-            .then((resData) => {
-                setResponse(resData)
-                
-              })
-      
-          }, 1000);
-        }, [])
+    const interval = setInterval(() => {
+      getMessages()
+        .then((resData) => {
+          setResponse(resData)
+        })
+    }, 1000);
+    return (() =>{clearInterval(interval)})
+  }, [])
+
   useEffect(()=>{
     setRooms(creatRoomList(response))
-  },
-  [response])
+  }, [response])
+
   return (
     <div className='app'>
 
@@ -45,7 +43,7 @@ function App() {
           <ul className='ul'>
             <li >
               <Link 
-                to="/rooms" 
+                to='/rooms'
                 className={`btn ${btnColor === 'curr' ? 'active' : ''}`} 
                 onClick={() => setBtnColor('curr')} 
               >
@@ -54,7 +52,7 @@ function App() {
             </li>
             <li >
               <Link 
-                to="/friends" 
+                to='/friends' 
                 className={`btn ${btnColor === 'prev' ? 'active' : ''}`} 
                 onClick={() => setBtnColor('prev')} 
               >
@@ -65,7 +63,7 @@ function App() {
           <div className='routes'>
             <Routes >
               <Route path='/rooms' element={<Rooms rooms={rooms} />}/>
-              <Route path="friends" element={<Friends />} />
+              <Route path='friends' element={<Friends />} />
               {rooms.map((room) => {
                     return (
                         <Route key={room} path={`rooms/${room}`} element={<Chats response={response} room={room}/>} />

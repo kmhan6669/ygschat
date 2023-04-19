@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { postMessage } from "../../hooks/chatMessagesAPIs";
+import { postMessage } from "../../apis/chatMessagesAPIs";
 
 import './InputChat.css'
 

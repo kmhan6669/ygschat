@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { postMessage } from "../../hooks/chatMessagesAPIs";
+import { postMessage } from "../../apis/chatMessagesAPIs";
 
 function CreateRoom (){
     const [showPopup, setShowPopup] = useState(false);
     const [inputRoomName, setInputRoomName] = useState('');
     
-    const newMessage = 'welcom to my new room!';
+    const newMessage = 'welcome to my new room!';
     const togglePopup = () => {
         setShowPopup(!showPopup)
     };
